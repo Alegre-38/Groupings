@@ -3,47 +3,51 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+    
+    protected $primaryKey = 'User_ID';
+    // User_ID is a string (VARCHAR)
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    const CREATED_AT = 'Date_Created';
+    const UPDATED_AT = null; // No updated_at in schema
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'User_ID',
+        'Username',
+        'Password',
+        'Role',
+        'Account_Status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'Password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relationships
+    public function student()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasOne(Student::class, 'User_ID', 'User_ID');
+    }
+
+    public function professor()
+    {
+        return $this->hasOne(Professor::class, 'User_ID', 'User_ID');
+    }
+    
+    // Auth interface requires password field
+    public function getAuthPassword()
+    {
+        return $this->Password;
     }
 }
