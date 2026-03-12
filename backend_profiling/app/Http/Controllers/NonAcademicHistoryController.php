@@ -46,4 +46,24 @@ class NonAcademicHistoryController extends Controller
     {
         //
     }
+
+    public function logActivity(Request $request, $studentId)
+    {
+        $request->validate([
+            'Activity_Type' => 'required|string',
+            'Activity_Name' => 'required|string',
+            'Date_Logged' => 'required|date',
+            'Contribution' => 'required|string',
+        ]);
+
+        $activity = \App\Models\NonAcademicHistory::logActivity(
+            $studentId,
+            $request->input('Activity_Type'),
+            $request->input('Activity_Name'),
+            $request->input('Date_Logged'),
+            $request->input('Contribution')
+        );
+
+        return response()->json(['message' => 'Activity logged successfully.', 'activity' => $activity], 201);
+    }
 }

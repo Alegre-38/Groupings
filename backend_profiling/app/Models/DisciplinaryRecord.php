@@ -15,4 +15,10 @@ class DisciplinaryRecord extends Model
     protected $guarded = [];
 
     public function student() { return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID'); }
+
+    public function updateStatus($newStatus)
+    {
+        $this->update(['Status' => $newStatus]);
+        return $this;
+    }
 }

@@ -21,4 +21,15 @@ class StudentDemographic extends Model
     public function disciplinaryRecords() { return $this->hasMany(DisciplinaryRecord::class, 'Student_ID', 'Student_ID'); }
     public function skillRepositories() { return $this->hasMany(SkillRepository::class, 'Student_ID', 'Student_ID'); }
     public function affiliations() { return $this->hasMany(Affiliation::class, 'Student_ID', 'Student_ID'); }
+
+    public function getProfile()
+    {
+        return $this->toArray();
+    }
+
+    public function updateClearance($clearanceStatus)
+    {
+        $this->update(['Med_Clearance' => $clearanceStatus]);
+        return $this;
+    }
 }

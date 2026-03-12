@@ -15,4 +15,13 @@ class AcademicHistory extends Model
     protected $guarded = [];
 
     public function student() { return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID'); }
+
+    public static function calculateGWA($studentId)
+    {
+        $records = self::where('Student_ID', $studentId)->get();
+        if ($records->isEmpty()) {
+            return 0;
+        }
+        return $records->avg('Final_Grade');
+    }
 }

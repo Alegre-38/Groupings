@@ -15,4 +15,13 @@ class FacultyRole extends Model
     protected $guarded = [];
 
     public function faculty() { return $this->belongsTo(FacultyCore::class, 'Faculty_ID', 'Faculty_ID'); }
+
+    public function assignRole($advisoryType, $assignedGroup)
+    {
+        $this->update([
+            'Advisory_Type' => $advisoryType,
+            'Assigned_Group' => $assignedGroup,
+        ]);
+        return $this;
+    }
 }

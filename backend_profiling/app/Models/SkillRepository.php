@@ -15,4 +15,20 @@ class SkillRepository extends Model
     protected $guarded = [];
 
     public function student() { return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID'); }
+
+    public static function addSkill($studentId, $category, $skill, $proficiency)
+    {
+        return self::create([
+            'Student_ID' => $studentId,
+            'Skill_Category' => $category,
+            'Specific_Skill' => $skill,
+            'Proficiency' => $proficiency,
+        ]);
+    }
+
+    public function updateProficiency($newProficiency)
+    {
+        $this->update(['Proficiency' => $newProficiency]);
+        return $this;
+    }
 }

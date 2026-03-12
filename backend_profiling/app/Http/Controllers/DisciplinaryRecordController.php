@@ -46,4 +46,12 @@ class DisciplinaryRecordController extends Controller
     {
         //
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate(['Status' => 'required|string']);
+        $record = \App\Models\DisciplinaryRecord::findOrFail($id);
+        $record->updateStatus($request->input('Status'));
+        return response()->json(['message' => 'Disciplinary status updated successfully.', 'record' => $record]);
+    }
 }

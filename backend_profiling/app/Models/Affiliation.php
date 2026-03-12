@@ -15,4 +15,10 @@ class Affiliation extends Model
     protected $guarded = [];
 
     public function student() { return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID'); }
+
+    public function promoteRole($newRole)
+    {
+        $this->update(['Role' => $newRole]);
+        return $this;
+    }
 }

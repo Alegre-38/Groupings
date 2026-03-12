@@ -36,7 +36,10 @@ class FacultyCoreController extends Controller
             return response()->json(['message' => 'Faculty not found'], 404);
         }
 
-        return response()->json($faculty);
+        $details = $faculty->getFacultyDetails();
+        $details['roles'] = $faculty->roles;
+
+        return response()->json($details);
     }
 
     /**

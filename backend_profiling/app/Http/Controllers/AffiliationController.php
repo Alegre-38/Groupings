@@ -46,4 +46,12 @@ class AffiliationController extends Controller
     {
         //
     }
+
+    public function promoteRole(Request $request, $id)
+    {
+        $request->validate(['Role' => 'required|string']);
+        $affiliation = \App\Models\Affiliation::findOrFail($id);
+        $affiliation->promoteRole($request->input('Role'));
+        return response()->json(['message' => 'Role promoted successfully.', 'affiliation' => $affiliation]);
+    }
 }

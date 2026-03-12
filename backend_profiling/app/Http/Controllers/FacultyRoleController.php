@@ -46,4 +46,21 @@ class FacultyRoleController extends Controller
     {
         //
     }
+
+    public function assignRole(Request $request, $facultyId)
+    {
+        $request->validate([
+            'Advisory_Type' => 'required|string',
+            'Assigned_Group' => 'required|string',
+        ]);
+
+        $role = \App\Models\FacultyRole::firstOrCreate(
+            ['Faculty_ID' => $facultyId],
+            ['Advisory_Type' => 'None', 'Assigned_Group' => 'None']
+        );
+
+        $role->assignRole($request->input('Advisory_Type'), $request->input('Assigned_Group'));
+        
+        return response()->json(['message' => 'Role assigned successfully.', 'role' => $role]);
+    }
 }

@@ -9,19 +9,60 @@ import './App.css';
 
 function App() {
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   return (
-    <div className="app-container">
-      <header>
-        <h1>Profiling System</h1>
-        <nav>
-          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Dashboard</Link>
-          <Link to="/students" className={location.pathname.startsWith('/students') ? 'active' : ''}>Students</Link>
-          <Link to="/faculties" className={location.pathname.startsWith('/faculties') ? 'active' : ''}>Faculty</Link>
-        </nav>
+    <div className="app-layout">
+      {/* Top Header for toggling the sidebar */}
+      <header className="top-header">
+        <button 
+          className="sidebar-toggle" 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Toggle Menu"
+        >
+          <svg style={{width: '24px', height: '24px', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none'}} viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span className="header-title">ProfileSys</span>
       </header>
 
-      <main>
+      {/* Sidebar Overlay for closing when clicking outside */}
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <h1>ProfileSys</h1>
+          <button 
+            className="sidebar-close"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            ✖
+          </button>
+        </div>
+        <nav className="sidebar-nav">
+          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+            <span className="icon"></span> Dashboard
+          </Link>
+          <Link to="/students" className={location.pathname.startsWith('/students') ? 'active' : ''}>
+            <span className="icon"></span> Students
+          </Link>
+          <Link to="/faculties" className={location.pathname.startsWith('/faculties') ? 'active' : ''}>
+            <span className="icon"></span> Faculty
+          </Link>
+        </nav>
+      </aside>
+
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<StudentsList />} />

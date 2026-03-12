@@ -46,4 +46,30 @@ class SkillRepositoryController extends Controller
     {
         //
     }
+
+    public function storeSkill(Request $request, $studentId)
+    {
+        $request->validate([
+            'Skill_Category' => 'required|string',
+            'Specific_Skill' => 'required|string',
+            'Proficiency' => 'required|string',
+        ]);
+
+        $skill = \App\Models\SkillRepository::addSkill(
+            $studentId,
+            $request->input('Skill_Category'),
+            $request->input('Specific_Skill'),
+            $request->input('Proficiency')
+        );
+
+        return response()->json(['message' => 'Skill added successfully.', 'skill' => $skill], 201);
+    }
+
+    public function updateProficiency(Request $request, $id)
+    {
+        $request->validate(['Proficiency' => 'required|string']);
+        $skill = \App\Models\SkillRepository::findOrFail($id);
+        $skill->updateProficiency($request->input('Proficiency'));
+        return response()->json(['message' => 'Proficiency updated successfully.', 'skill' => $skill]);
+    }
 }

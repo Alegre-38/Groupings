@@ -15,4 +15,15 @@ class NonAcademicHistory extends Model
     protected $guarded = [];
 
     public function student() { return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID'); }
+
+    public static function logActivity($studentId, $type, $name, $date, $contribution)
+    {
+        return self::create([
+            'Student_ID' => $studentId,
+            'Activity_Type' => $type,
+            'Activity_Name' => $name,
+            'Date_Logged' => $date,
+            'Contribution' => $contribution,
+        ]);
+    }
 }

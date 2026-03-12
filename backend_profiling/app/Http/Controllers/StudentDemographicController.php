@@ -36,15 +36,25 @@ class StudentDemographicController extends Controller
      */
     public function show(StudentDemographic $studentDemographic)
     {
-        return response()->json(
-            $studentDemographic->load([
-                'academicHistories', 
-                'nonAcademicHistories', 
-                'disciplinaryRecords', 
-                'skillRepositories', 
-                'affiliations'
-            ])
-        );
+        $studentDemographic->load([
+            'academicHistories', 
+            'nonAcademicHistories', 
+            'disciplinaryRecords', 
+            'skillRepositories', 
+            'affiliations'
+        ]);
+
+        $profileConfig = $studentDemographic->getProfile();
+        $gwa = \App\Models\AcademicHistory::calculateGWA($studentDemographic->Student_ID);
+
+        return response()->json(array_merge($profileConfig, [
+            'academic_histories' => $studentDemographic->academicHistories,
+            'non_academic_histories' => $studentDemographic->nonAcademicHistories,
+            'disciplinary_records' => $studentDemographic->disciplinaryRecords,
+            'skill_repositories' => $studentDemographic->skillRepositories,
+            'affiliations' => $studentDemographic->affiliations,
+            'calculated_gwa' => $gwa,
+        ]));
     }
 
     /**
@@ -61,5 +71,13 @@ class StudentDemographicController extends Controller
     public function destroy(StudentDemographic $studentDemographic)
     {
         //
+    }
+
+    public function updateClearance(Request $request, $id)
+    {
+        $request->validate(['Med_Clearance' => 'required|boolean']);
+        $student = StudentDemographic::findOrFail($id);
+        $student->updateClearance($request->input('Med_Clearance'));
+        return response()->json(['message' => 'Medical clearance updated securely.', 'student' => $student]);
     }
 }
