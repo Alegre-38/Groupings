@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import StudentsList from './pages/StudentsList';
 import StudentDetail from './pages/StudentDetail';
+import RegisterStudent from './pages/RegisterStudent';
 import FacultyList from './pages/FacultyList';
 import FacultyDetail from './pages/FacultyDetail';
 import Dashboard from './pages/Dashboard';
@@ -66,6 +67,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<StudentsList />} />
+          <Route path="/students/register" element={<RegisterStudent />} />
           <Route path="/students/:id" element={<StudentDetail />} />
           <Route path="/faculties" element={<FacultyList />} />
           <Route path="/faculties/:id" element={<FacultyDetail />} />

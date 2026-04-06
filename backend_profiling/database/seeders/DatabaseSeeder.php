@@ -15,23 +15,72 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $students = \App\Models\StudentDemographic::factory(15)->create();
-        
-        foreach ($students as $student) {
-            \App\Models\AcademicHistory::factory(5)->create(['Student_ID' => $student->Student_ID]);
-            \App\Models\NonAcademicHistory::factory(3)->create(['Student_ID' => $student->Student_ID]);
-            // Not every student has disciplinary records, only 30% chance
-            if (rand(1, 100) <= 30) {
-                \App\Models\DisciplinaryRecord::factory(1)->create(['Student_ID' => $student->Student_ID]);
-            }
-            \App\Models\SkillRepository::factory(4)->create(['Student_ID' => $student->Student_ID]);
-            \App\Models\Affiliation::factory(2)->create(['Student_ID' => $student->Student_ID]);
+        // 1. Create Core Lookup/Standalone Entities
+        $departments = \App\Models\Department::factory(5)->create();
+        $skillCategories = \App\Models\SkillCategory::factory(5)->create();
+        $sportTypes = \App\Models\SportType::factory(8)->create();
+
+        // 2. Create Professors (relies on Departments)
+        $professors = collect();
+        for ($i = 0; $i < 15; $i++) {
+            $professors->push(\App\Models\Professor::factory()->create([
+                'Department_ID' => $departments->random()->Department_ID
+            ]));
         }
 
-        $faculties = \App\Models\FacultyCore::factory(8)->create();
+        // 3. Create Organizations (relies on Departments and Professors)
+        $organizations = collect();
+        for ($i = 0; $i < 10; $i++) {
+            $organizations->push(\App\Models\Organization::factory()->create([
+                'Department_ID' => $departments->random()->Department_ID,
+                'Adviser_ID' => $professors->random()->Professor_ID
+            ]));
+        }
 
-        foreach ($faculties as $faculty) {
-            \App\Models\FacultyRole::factory(rand(1,3))->create(['Faculty_ID' => $faculty->Faculty_ID]);
+        // 4. Create Students and their associated records
+        $students = \App\Models\Student::factory(40)->create();
+
+        foreach ($students as $student) {
+            // Add Skills
+            for ($i = 0; $i < rand(1, 3); $i++) {
+                \App\Models\Skill::factory()->create([
+                    'Student_ID' => $student->Student_ID,
+                    'Skill_Category_ID' => $skillCategories->random()->Category_ID
+                ]);
+            }
+
+            // Add Sports (optional)
+            if (rand(1, 100) > 40) {
+                for ($i = 0; $i < rand(1, 2); $i++) {
+                    \App\Models\Sport::factory()->create([
+                        'Student_ID' => $student->Student_ID,
+                        'Sport_Type_ID' => $sportTypes->random()->Sport_Type_ID
+                    ]);
+                }
+            }
+
+            // Add Certificates
+            for ($i = 0; $i < rand(0, 3); $i++) {
+                \App\Models\Certificate::factory()->create([
+                    'Student_ID' => $student->Student_ID
+                ]);
+            }
+
+            // Add Violations (optional)
+            if (rand(1, 100) > 80) {
+                \App\Models\Violation::factory()->create([
+                    'Student_ID' => $student->Student_ID
+                ]);
+            }
+
+            // Add Organization Memberships
+            $joinedOrgs = $organizations->random(rand(1, 3));
+            foreach ($joinedOrgs as $org) {
+                \App\Models\StudentOrganization::factory()->create([
+                    'Student_ID' => $student->Student_ID,
+                    'Organization_ID' => $org->Organization_ID
+                ]);
+            }
         }
     }
 }

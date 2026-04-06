@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StudentOrganization extends Model
 {
+    use HasFactory;
     protected $table = 'student_organizations';
     protected $primaryKey = 'ID';
     public $timestamps = false;

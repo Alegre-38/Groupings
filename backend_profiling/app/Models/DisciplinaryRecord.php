@@ -5,23 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Violation extends Model
+class DisciplinaryRecord extends Model
 {
     use HasFactory;
-    protected $table = 'violations';
+
+    protected $table = 'disciplinary_records';
     protected $primaryKey = 'Violation_ID';
     public $timestamps = false;
 
     protected $fillable = [
         'Student_ID',
-        'Offense_Type',
-        'Severity_Level',
+        'Offense_Level',
         'Status',
-        'Date_Reported',
+        'Date_Logged',
     ];
 
     public function student()
     {
-        return $this->belongsTo(Student::class, 'Student_ID', 'Student_ID');
+        return $this->belongsTo(StudentDemographic::class, 'Student_ID', 'Student_ID');
+    }
+
+    public function updateStatus($status)
+    {
+        $this->Status = $status;
+        $this->save();
     }
 }

@@ -10,6 +10,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/students', [StudentDemographicController::class, 'index']);
+Route::post('/students', [StudentDemographicController::class, 'store']);
 Route::get('/students/{id}', [StudentDemographicController::class, 'show']);
 
 Route::get('/faculties', [FacultyCoreController::class, 'index']);
